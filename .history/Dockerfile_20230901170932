@@ -1,0 +1,14 @@
+FROM ubuntu:20.04
+
+RUN apt-get update \
+  && apt-get install -y golang git
+
+WORKDIR /app 
+
+RUN go get github.com/golang/dep/cmd/dep
+
+RUN git clone git@github.com:1dayluo/subnya.git
+
+WORKDIR /app/subnya 
+
+RUN dep ensure -v

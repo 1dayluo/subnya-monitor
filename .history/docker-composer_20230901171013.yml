@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  server:
+    build: ./
+    ports: 
+      - 80:80
+    user: www-data
+    restart: always
+    depends_on:
+      - db
+  db:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    
