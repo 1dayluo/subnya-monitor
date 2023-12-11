@@ -1,0 +1,14 @@
+[project]
+name = "subnya-monitor"
+version = "0.1.0"
+description = "subnya-monitor"
+readme = "README.md"
+requires-python = ">=3.8, <4.0"
+
+[tool.nonebot]
+adapters = [
+    { name = "Telegram", module_name = "nonebot.adapters.telegram" }
+]
+plugins = ["nonebot_plugin_scheduled_broadcast", "nonebot_plugin_status"]
+plugin_dirs = ["src/plugins"]
+builtin_plugins = ["echo", "single_session"]
