@@ -1,11 +1,11 @@
 import nonebot
-from src.plugins.monitor import *
 from nonebot.adapters.telegram import Adapter as TelegramAdapter
 
 nonebot.init()
 app = nonebot.get_asgi()
 
 driver = nonebot.get_driver()
+
 driver.register_adapter(TelegramAdapter)
 
 nonebot.load_builtin_plugins("echo")
