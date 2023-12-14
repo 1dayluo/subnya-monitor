@@ -8,7 +8,7 @@ driver = nonebot.get_driver()
 
 driver.register_adapter(TelegramAdapter)
 
-nonebot.load_builtin_plugins("echo")
+nonebot.load_plugins("src/plugins/monitor")
 
 if __name__ == "__main__":
     nonebot.logger.warning("Always use `nb run` to start the bot instead of manually running!")

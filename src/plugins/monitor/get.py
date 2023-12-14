@@ -16,21 +16,26 @@ from nonebot.adapters.telegram.event import MessageEvent
 #     except IndexError:
 #         return None
 
-command = on_command(
-    "get"
-)
 
         
-@command.handle()
-async def _(matcher: Matcher, event: MessageEvent):
+@on_command("get").handle()
+async def _(bot: Bot, event: MessageEvent):
+    if not is_tool('subnya'):
+        get_tool()
     if is_command_available("subnya"):
-        await matcher.send(
+        await bot.send(
+            event,
             "subnya command is available",
             reply_to_message_id=event.message_id,
         )
 
     else:
-        await matcher.send(
+        await bot.send(
+            event,
             "subnya command is not available",
             reply_to_message_id=event.message_id,
          )   
+
+@on_command("hello").handle()
+async def _(bot: Bot, event: MessageEvent):
+    await bot.send(event, "hola!", reply_to_message_id=event.message_id)
