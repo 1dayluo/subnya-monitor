@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+
+    <title>Subnya | 子域名遍历</title>
+    {% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}" type="text/css">
+
+
+
+
+
+
+</head>
+<body>
+
+<h1>System Dashboard</h1>
+<nav>
+    <ul id="menu">
+        <li><a href="/">Home</a></li>
+        <li><a href="/today">Today's New</a></li>
+        <li><a href="/logs">Logs</a></li>
+        <li><a href="/tasks">Scheduled Tasks</a></li>
+        <li><a href="/stats">Run Statistics</a></li>
+    </ul>
+</nav>
+
+{% block body %}
+<!-- File List Section -->
+<p>History output files:</p>
+<section id="file-list">
+        <!-- Your file loop here -->
+    {% for log in log_files %}
+        <ul><a href='{{ url_for('outfile',filename = log) }}'>{{ log }}</a></ul>
+    {% endfor %}
+
+</section>
+{% endblock %}
+</body>
+</html>
