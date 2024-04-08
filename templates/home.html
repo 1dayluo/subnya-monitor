@@ -18,9 +18,10 @@
 </head>
 <body>
 
-<h1>System Dashboard</h1>
-<nav>
+
+<nav class="home-nav">
     <ul id="menu">
+        <h1>Dashboard</h1>
         <li><a href="/">Home</a></li>
         <li><a href="/today">Today's New</a></li>
         <li><a href="/logs">Logs</a></li>
@@ -29,16 +30,26 @@
     </ul>
 </nav>
 
-{% block body %}
 <!-- File List Section -->
-<p>History output files:</p>
-<section id="file-list">
-        <!-- Your file loop here -->
-    {% for log in log_files %}
-        <ul><a href='{{ url_for('outfile',filename = log) }}'>{{ log }}</a></ul>
-    {% endfor %}
+<main>
+    
+    {% block body %}
+    <!-- File List Section -->
+    <h3>History output files:</h3>
+    <section id="content">
+        {% for log in log_files %}
+            <ul><a href='{{ url_for('outfile', filename=log) }}'>{{ log }}</a></ul>
+        {% endfor %}
+    </section>
+    <h3>Monitor domains:</h3>
+    <section id="content">
+        {% for domain in  monitored %}
+        <ul>🔍 {{ domain }}</ul>
+        {% endfor %}
+    </section>
+    {% endblock %}
 
-</section>
-{% endblock %}
+</main>
+
 </body>
 </html>

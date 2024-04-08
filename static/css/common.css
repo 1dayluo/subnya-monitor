@@ -1,75 +1,94 @@
-/* Existing styles remain unchanged */
+/* Defaults */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f8f8f8;
     margin: 0;
-    padding: 20px;
     color: #333;
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh; /* Ensure full viewport height */
 }
 
-/* Updated h1 styles to include the light pink background */
-h1 {
-    background-color: #FFD4E5; /* Light Pink Background */
-    color: #333;
-    padding: 10px 20px;
-    margin: 0;
-    border-bottom: 2px solid #FFB6C1; /* Slightly darker pink for the border */
-}
-
-/* ... */
-
-/* Menu Styling */
-nav {
-    background-color: #FFD4E5; /* Light pink background for the menu */
-    margin-bottom: 20px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Style for menu items */
-nav ul#menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-    border-radius: 4px; /* Rounded corners for the menu */
-}
-
-/* Style for individual menu links */
-nav ul#menu li {
-    float: left; /* Align menu items horizontally */
-}
-
-nav ul#menu li a {
-    display: block;
-    color: #f8d4e5; /* Darker text on the light background for contrast */
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    transition: background-color 0.3s ease-in-out; /* Smooth transition for hover effect */
-}
-
-/* Menu links hover effects */
-nav ul#menu li a:hover {
-    background-color: #FFB6C1; /* A slightly darker pink on hover */
-    color: white;
-}
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f8f8f8;
-    margin: 0;
-    padding: 20px;
-    color: #333;
-}
-
-/* Applies to all headings */
-h1 {
+/* Header styles inside main content */
+main > h1 {
     background-color: #5D647B;
     color: #fff;
     padding: 10px 20px;
-    margin: 0;
+    margin: 0 0 20px 0;
     border-bottom: 2px solid #424a5d;
 }
+
+/* ... Form styling remains unchanged ... */
+
+/* Menu styling for a vertical layout */
+nav {
+    width: 250px; /* fixed width for the nav menu */
+    background-color: #243043;
+    color: white;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto; /* Allows scrolling of the nav menu if it's too long */
+}
+
+nav ul#menu {
+    list-style: none;
+    padding: 20px 0;
+    margin: 0;
+    background-color: #243043; /* Dark blue background */
+    width: 100%;
+    /* Clear float children because we moved from horizontal to vertical */
+    float: none;
+}
+
+
+nav ul#menu li {
+    /* Clear existing float and apply necessary styling for vertical menu */
+    padding: 0;
+}
+
+.home-nav ul#menu li a {
+    /* 块状元素又称作“block-level”元素，会填满它的容器，这里是<li>标签 */
+    display: block;
+    color: white;
+    text-align: left;
+    padding: 14px 20px;
+    text-decoration: none;
+    border-bottom: 1px solid #2e3447; /* 添加分隔符 */
+    width: 100%; /* 设置宽度以填满整个<li> */
+}
+
+/* Menu links hover effects */
+.home-nav ul#menu li a:hover {
+    background-color: #4a4f5e;
+}
+
+
+
+/* Ensure the main content area is next to the navbar and uses remaining space */
+main {
+    flex-grow: 1;
+    padding-left: 250px; /* Same as the navigation width */
+}
+/* Improved readability for the file list section */
+section,div#content {
+    background-color: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px;
+    border-radius: 4px;
+}
+
+.one-main {
+    /* 撤销左侧的 padding，使得内容可以充分宽展 */
+    padding-left: 0; 
+    /* 如果你想要居中对齐这个主体内容，可以使用以下样式 */
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%; /* 或者你可以设置一个固定的宽度 */
+}
+
 
 /* Settings Form Styling */
 form {
@@ -116,10 +135,6 @@ form input[type="submit"]:hover {
     background-color: #5D647B;
 }
 
-/* Menu Styling */
-nav {
-    background-color: #EFEFEF; /* Light grey background */
-}
 
 /* Style for menu items */
 nav ul#menu {
@@ -130,23 +145,8 @@ nav ul#menu {
     background-color: #243043; /* Dark blue background */
 }
 
-/* Style for individual menu links */
-nav ul#menu li {
-    float: left; /* Align menu items horizontally */
-}
 
-nav ul#menu li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
 
-/* Menu links hover effects */
-nav ul#menu li a:hover {
-    background-color: #4a4f5e;
-}
 
 /* List styling */
 section#file-list ul {

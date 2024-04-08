@@ -2,6 +2,8 @@ from flask import Flask, redirect, url_for, render_template, \
     request, flash, session, Response
 import os
 import pathlib
+import sqlite3
+
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4a@@Q8z\n\xec]/'
 base_config_path = str(pathlib.Path.home())+'/.config/subnya'
@@ -11,6 +13,7 @@ sql_path = ''
 
 @app.route('/')
 def home():
+    global conn
     if len(output_dir) == 0 or len(sql_path) == 0:
         flash('Path not exists!please set base path ')
         return redirect(url_for('setenv'))    
@@ -18,7 +21,10 @@ def home():
         if os.path.exists(output_dir) and os.path.exists(sql_path):
             # read log file
             all_files = os.listdir(output_dir)
-            return render_template('home.html', log_files=all_files)
+            db = sqlite3.connect(sql_path)
+            conn = db.cursor()
+            results = [ result[0] for result in  conn.execute('SELECT DISTINCT domain FROM domains')]
+            return render_template('home.html', log_files=all_files, monitored=results)
         else:
             flash('Please set correct path!')
             return redirect(url_for('setenv'))

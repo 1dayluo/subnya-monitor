@@ -9,10 +9,13 @@
 </head>
 
 <body>
-{% block body %}
-<div class="content">
-    <pre>{{ text_content }}</pre>
-</div>
-{% endblock %}
+    <main>
+        {% block body %}
+        <div id="content">
+            <pre>{{ text_content }}</pre>
+        </div>
+        {% endblock %}
+    </main>
+
 
 </body>
