@@ -32,9 +32,9 @@
                 {% for subdomain, info in subdomains.items() %}
                 <li class="{{ 'status-ok' if info['STATUS'] not in [404, 503, -1, 500, 403, 504] else 'status-error' }}">
                     {% if info['STATUS'] not in [404, 503, -1, 500, 403, 504] %}
-                    🟢 <span>{{ subdomain }}</span>
+                    🟢 <span>{{ subdomain }}({{ info['STATUS'] }})</span> 
                     {% else %}
-                    🔴 <span>{{ subdomain }}</span>
+                    🔴 <span>{{ subdomain }}({{ info['STATUS'] }})</span>
                     {% endif %}
                 </li>
                 {% endfor %}
