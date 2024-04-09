@@ -1,0 +1,32 @@
+.domain-status {
+    border: 1px solid #DDD; /* 添加边框 */
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px; /* 圆角边框 */
+    transition: all 0.25s; /* 平滑过渡效果 */
+}
+.domain-status h3 {
+    cursor: pointer; /* 手型光标 */
+    position: relative;
+    padding-left: 20px;
+}
+.domain-status ul {
+    list-style-type: none; /* 去除默认的列表样式 */
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s; /* 平滑过渡效果 */
+}
+.domain-status ul li {
+    padding: 5px 0;
+}
+.domain-status ul li span {
+    margin-left: 20px;
+}
+/* 一些特定的样式会根据域名状态添加 */
+.status-ok {
+    color: green; /* 正常状态的颜色为绿色 */
+}
+.status-error {
+    color: red; /* 错误状态的颜色为红色 */
+}

@@ -1,0 +1,48 @@
+{% extends 'home.html' %}
+
+<head>
+{% block head %}
+<title>Today's new domains</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/domaininfo.css') }}" type="text/css">
+
+<script>
+    // 添加JS以处理折叠效果
+    function toggleCollapse(elementId) {
+        const content = document.getElementById(elementId);
+        if (content.style.maxHeight){
+            content.style.maxHeight = null;
+        } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+        }
+    }
+</script>
+{% endblock %}
+
+</head>
+
+<body>
+{% block body %}
+<main>
+    <div>
+        <!-- 创建一个单独的div包含域名和子域名信息 -->
+        {% for domain, subdomains in domains.items() %}
+        <div class="domain-status">
+            <h3 onclick="toggleCollapse('{{ domain }}')">✅ {{ domain }}</h3>
+            <ul id="{{ domain }}">
+                {% for subdomain, info in subdomains.items() %}
+                <li class="{{ 'status-ok' if info['STATUS'] not in [404, 503, -1, 500, 403, 504] else 'status-error' }}">
+                    {% if info['STATUS'] not in [404, 503, -1, 500, 403, 504] %}
+                    🟢 <span>{{ subdomain }}</span>
+                    {% else %}
+                    🔴 <span>{{ subdomain }}</span>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}
+
+</body>
