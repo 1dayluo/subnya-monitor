@@ -1,27 +1,28 @@
 <template>
   <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
   <div class="container mx-auto">
-    <div class="box p-6">
-      <div class="flex  pl-1 ">
-        <div class="w-1/3 outline-cyan-500  text-slate-700 bg-gray-300 rounded-lg ">
-          <div class="grid place-content-center m-10  ">
-            <h1 class="capitalize">dash board</h1>
-            <div class="pt-6 ">
-              <SideMenu class="hover:transition-all"/>
-            </div>
-          </div>  
 
-          
-        </div>
-        <div class="w-2/3">    
-          <div class="grid place-content-center m-10">
-            <p>content</p>
+    <div class="flex  pl-1 ">
+      <div class="w-1/6 outline-cyan-500  text-slate-700 rounded-lg bg-gradient-to-b from-sky-800 to-indigo-800 ">
+        <div class="grid place-content-center m-10 h-screen">
+
+          <div class="pt-6 ">
+            <SideMenu class="hover:transition-all"/>
+            <!-- <route-view></route-view> -->
           </div>
-        </div>
+        </div>  
 
+        
+      </div>
+      <div class="w-5/6">    
+        <!-- <div class="grid place-content-center m-10"> -->
+          <router-view></router-view>
+        <!-- </div> -->
       </div>
 
     </div>
+
+
   </div>
 
 </template>
@@ -33,7 +34,9 @@ export default {
   name: 'App',
   components: {
     SideMenu
-  }
+  },
+
+
 }
 </script>
 
