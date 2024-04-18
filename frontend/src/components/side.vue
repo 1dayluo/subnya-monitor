@@ -1,23 +1,17 @@
 <template>
-  <div id="app">
-    <nav class="home-nav">
-      <ul id="menu">
-        <li v-for="menu in menus" :key="menu[0]">
-          <!-- 我不会告诉你 我注视掉没有删掉只是觉得很好玩x （⬇️谁点到算谁狠） -->
-          <!-- <button type="button" class="animate-spin transition duration-300 cursor-pointer"> -->
-           
-              <button type="button" class=" transition duration-300 cursor-pointer pt-4 ">
-              <!-- <a :href="menu[1]" class="text-gray-100 hover:text-gray-400 ">{{ menu[0] }}</a> -->
-              <router-link :to="menu[1]" class="text-gray-100 hover:text-gray-400 ">{{ menu[0] }}</router-link>
-
-              </button>
-           
+  <div>
+    <nav class="flex flex-col space-y-2 p-4">
+      <ul>
+        <li v-for="menu in menus" :key="menu[0]" class="hover:bg-gray-700 rounded-md transition duration-200">
+          <router-link :to="menu[1]" class="block py-2 px-4 text-gray-100 hover:text-gray-400">
+            {{ menu[0] }}
+          </router-link>
         </li>
       </ul>
     </nav>
-    <!-- File List Section -->
   </div>
 </template>
+
 
 <script type="text/javascript">
 

@@ -1,10 +1,15 @@
 <template>
     <!-- <div> -->
-      <div id="history-files" class="flex">
+      <div id="history-files" class="">
         <h1>History</h1>
+
+        
       </div>
-      <div id="monitor" class="flex">
+      <div id="monitor" class="">
         <h1>Monitor domains</h1>
+        <li v-for="domain in monitorList" :key="domain">
+           {{  domain  }}
+        </li>
       </div>
     <!-- </div> -->
 </template>
@@ -14,19 +19,34 @@ import axios from "axios";
 
 export default {
   name: 'homeIndex',
+  data() {
+    return {
+      monitorList: ''
+    }
+  },
+
   methods:{
    outfile(){
-    axios.get('/api/outfile/${{ route.params.filedate}}')
+    axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/outfile/${route.params.filedate}`)
     .then((res) => {
       
     })
    },
    getlist_outfiles(){
-    axios.get('/api/get_outfile')
-    .then((res) => {
 
-    })
    } 
-  }
+  },
+  async created() {
+    try {
+
+      axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/get_monitored`)
+      .then((res) => {
+          this.monitorList = res.data.domains
+      })
+    } catch (error) {
+      console.error("API 请求失败:", error);
+    }
+  },
 }
+
 </script>

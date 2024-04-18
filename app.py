@@ -1,12 +1,15 @@
 from flask import Flask, redirect, url_for, render_template, \
-    request, flash, session, Response
+    request, jsonify, flash, session, Response
 import os
 import pathlib
 import datetime
 import sqlite3
 import json
+from flask_cors import CORS
+import yaml
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = b'_5#y2L"F4a@@Q8z\n\xec]/'
 base_config_path = str(pathlib.Path.home())+'/.config/subnya'
 log_file = base_config_path + '/log/monitor_run.log'
@@ -14,10 +17,57 @@ output_dir = ''
 sql_path = ''
 
 
+
 def get_db_connection():
+    """
+        获取db链接
+    """
     db = sqlite3.connect(sql_path)
     conn = db.cursor()# This is optional: it allows accessing columns by name
     return conn
+
+@app.route('/api/read_config')
+def read_config():
+    """
+     读取subnya的配置文件
+    """
+    global output_dir, sql_path
+    os.environ['DEFAULT_PATH']=base_config_path+'/'+'config.yml'
+    if os.path.exists(os.environ['DEFAULT_PATH']):
+        with open(os.environ['DEFAULT_PATH'], 'r') as f:
+            result = yaml.load(f.read(), Loader=yaml.FullLoader)
+        output_dir =  base_config_path+'/output' if result['monitor']['dir'] == './output' else result['monitor']['dir']
+        sql_path =   base_config_path+'/db/monitor.db' if result['sqlite']['db_1'] == "./db/monitor.db" else result['sqlite']['db_1']
+        return json.dumps(result)
+        # return result['monitor']['dir'][0]
+    else:
+        return
+
+@app.route('/api/set-config-path', methods=['POST'])
+def set_config():
+    """
+      设置subnya的配置路径
+    """
+    data = request.json  # 获取 JSON 数据
+    print(data)
+    default_path = data.get('path')
+    if default_path.split('.')[-1]== 'yml':
+        os.environ['DEFAULT_PATH'] = default_path
+        if os.path.exists(os.environ['DEFAULT_PATH']):
+            return jsonify({"message": "Config path updated", "path": default_path}), 200
+        else:
+            return jsonify({"error": "No path specified"}), 400
+
+    else:
+        return jsonify({"error": "No path specified"}), 400
+
+
+@app.route('/api/get_monitored')
+def get_monitor_list():
+    conn = get_db_connection()
+    results = [ result[0] for result in  conn.execute('SELECT DISTINCT domain FROM domains')]
+    return jsonify({"message":"ok","domains": results})
+
 
 @app.route('/')
 def home():
@@ -85,3 +135,7 @@ def today():
 
     # return json.dumps(domain_info)
     return render_template('today_task.html', domains=domain_info )
+
+@app.route('/api/test')
+def test():
+    return 'backend test!'
