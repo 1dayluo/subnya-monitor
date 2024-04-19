@@ -7,7 +7,8 @@ module.exports = {
   plugins: [],
   content: [
     '../templates/**/*.html',
-    './src/**/*.{vue,js,ts,jsx,tsx}'
+    './src/**/*.{vue,js,ts,jsx,tsx}',
+    './src/views/*.vue'
   ],
 }
 

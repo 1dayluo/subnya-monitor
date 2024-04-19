@@ -7,6 +7,7 @@ import sqlite3
 import json
 from flask_cors import CORS
 import yaml
+import datetime, time
 
 app = Flask(__name__)
 CORS(app)
@@ -15,7 +16,7 @@ base_config_path = str(pathlib.Path.home())+'/.config/subnya'
 log_file = base_config_path + '/log/monitor_run.log'
 output_dir = ''
 sql_path = ''
-
+target_dir = ''
 
 
 def get_db_connection():
@@ -31,13 +32,16 @@ def read_config():
     """
      读取subnya的配置文件
     """
-    global output_dir, sql_path
+    global output_dir, sql_path, target_dir, log_file
     os.environ['DEFAULT_PATH']=base_config_path+'/'+'config.yml'
     if os.path.exists(os.environ['DEFAULT_PATH']):
         with open(os.environ['DEFAULT_PATH'], 'r') as f:
             result = yaml.load(f.read(), Loader=yaml.FullLoader)
-        output_dir =  base_config_path+'/output' if result['monitor']['dir'] == './output' else result['monitor']['dir']
-        sql_path =   base_config_path+'/db/monitor.db' if result['sqlite']['db_1'] == "./db/monitor.db" else result['sqlite']['db_1']
+        output_dir =  base_config_path+result['monitor']['settings']['outdir'][1:] if result['monitor']['settings']['outdir'][0] == '.' else result['monitor']['settings']['outdir']
+        sql_path =   base_config_path+result['sqlite']['db_1'][1:] if result['sqlite']['db_1'][0] == "." else result['sqlite']['db_1']
+        log_file = base_config_path+result['monitor']['settings']['logdir'][1:] if result['monitor']['settings']['logdir'][0] == '.' else result['monitor']['settings']['logdir']
+        target_dir =   base_config_path+result['monitor']['dir'][1:] if result['monitor']['dir'][0] == '.'  else result['monitor']['dir']
+
         return json.dumps(result)
         # return result['monitor']['dir'][0]
     else:
@@ -68,6 +72,31 @@ def get_monitor_list():
     results = [ result[0] for result in  conn.execute('SELECT DISTINCT domain FROM domains')]
     return jsonify({"message":"ok","domains": results})
 
+@app.route('/api/run_today_status')
+def get_today():
+    """
+        今日是否跑过脚本
+    """
+    global output_dir
+    today = datetime.datetime.today().strftime("%Y-%m-%d")
+    if today in os.listdir(output_dir):
+        return jsonify({"messgae":"ok", "result": true})
+    else:
+        return jsonify({"messgae":"ok", "result": false})
+    
+
+
+@app.route('/api/add_monitor/<domain>', methods=['POST', 'GET'])
+def add_monitor(domain:str):
+    """
+        增加监控
+    """
+    global target_dir
+    with open(os.path.join(target_dir,'monitor.txt'), '+a') as f:
+        source_domains = f.readlines()
+        if domain not in source_domains:
+            f.writelines([domain])
+    return jsonify({"messgae":"ok", "result": true})
 
 @app.route('/')
 def home():
@@ -136,6 +165,3 @@ def today():
     # return json.dumps(domain_info)
     return render_template('today_task.html', domains=domain_info )
 
-@app.route('/api/test')
-def test():
-    return 'backend test!'

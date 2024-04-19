@@ -3,7 +3,7 @@
   <!-- {{ monitor_config  }} -->
   <!-- {{ Object.keys(monitor_config).length }} -->
   <!-- {{ Object.keys(monitor_config).length === 0 }} -->
-  <div v-if="Object.keys(monitor_config).length != 0" class=" mx-auto bg-gray-50 min-h-screen">
+  <div v-if="Object.keys(monitor_config).length != 0" class=" mx-auto  min-h-screen">
     <div class="flex h-full min-h-screen">
       <!-- 左侧导航栏 -->
       <div class="w-1/6 bg-slate-900 text-gray-100">
@@ -13,7 +13,8 @@
       </div>
       <!-- 右侧内容区 -->
       <div class="w-5/6 p-10">
-        <router-view></router-view>
+        <router-tree :routes="routes" />
+    <router-view />
       </div>
     </div>
   </div>

@@ -23,12 +23,12 @@ export default {
   data() {
     return {
       menus:[
-        ['Home','/'],
-        ['Today\'s New', '/today'],
-        ['Logs','/log'],
-        ['Scheduled Tasks','/task'],
-        ['Run Statistics','/statistics'],
-        ['Alert','/alert']
+        ['首页','/'],
+        ['今日新增', '/today'],
+        ['运行日志','/log'],
+        ['计划任务','/task'],
+        ['运行统计','/statistics'],
+        ['告警提醒','/alert']
       ]
     }
   }

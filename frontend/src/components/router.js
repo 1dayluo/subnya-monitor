@@ -9,12 +9,12 @@ import Alert from '../views/Alert.vue'
 
 
 const routes = [
-    { path: '/', component: Home },
-    { path: '/today', component: Today },
-    { path: '/log', component: Log },
-    { path: '/task', component: Task },
-    { path: '/statistics', component: Statistics },
-    { path: '/alert', component: Alert }
+    { path: '/', component: ()=>Home },
+    { path: '/today', component: () => Today },
+    { path: '/log', component: () => Log },
+    { path: '/task', component: () => Task },
+    { path: '/statistics', component: () => Statistics },
+    { path: '/alert', component: () => Alert }
 
   ];
   
