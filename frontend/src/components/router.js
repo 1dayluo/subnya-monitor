@@ -5,6 +5,7 @@ import Log from '../views/Log.vue'
 import Task from '../views/Task.vue'
 import Statistics from '../views/Statistics.vue'
 import Alert from '../views/Alert.vue'
+import Add from '../views/Add.vue'
 // VueRouter.use(VueRouter)
 
 
@@ -14,7 +15,8 @@ const routes = [
     { path: '/log', component: () => Log },
     { path: '/task', component: () => Task },
     { path: '/statistics', component: () => Statistics },
-    { path: '/alert', component: () => Alert }
+    { path: '/alert', component: () => Alert },
+    { path: '/add', component: () => Add }
 
   ];
   

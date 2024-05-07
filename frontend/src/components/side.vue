@@ -1,16 +1,19 @@
 <template>
-  <div>
-    <nav class="flex flex-col space-y-2 p-4">
-      <ul>
-        <li v-for="menu in menus" :key="menu[0]" class="hover:bg-gray-700 rounded-md transition duration-200">
-          <router-link :to="menu[1]" class="block py-2 px-4 text-gray-100 hover:text-gray-400">
-            {{ menu[0] }}
-          </router-link>
-        </li>
-      </ul>
-    </nav>
-  </div>
-</template>
+
+  <ul class="mt-6 space-y-1">
+    <li v-for="menu in menus" :key="menu[0]">
+      <router-link :to="menu[1]"  class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+     
+     >
+      {{ menu[0] }}
+      </router-link>
+
+    </li>
+  </ul>
+
+
+  
+  </template>
 
 
 <script type="text/javascript">
@@ -28,7 +31,8 @@ export default {
         ['运行日志','/log'],
         ['计划任务','/task'],
         ['运行统计','/statistics'],
-        ['告警提醒','/alert']
+        ['告警提醒','/alert'],
+        ['添加域名','/add']
       ]
     }
   }
