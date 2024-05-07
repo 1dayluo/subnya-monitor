@@ -86,17 +86,18 @@ def get_today():
     
 
 
-@app.route('/api/add_monitor/<domain>', methods=['POST', 'GET'])
-def add_monitor(domain:str):
+@app.route('/api/add_monitor', methods=['POST'])
+def add_monitor():
     """
         增加监控
     """
     global target_dir
+    domain = request.get_json()['domain']
     with open(os.path.join(target_dir,'monitor.txt'), '+a') as f:
         source_domains = f.readlines()
         if domain not in source_domains:
             f.writelines([domain])
-    return jsonify({"messgae":"ok", "result": true})
+    return jsonify({"messgae":"ok", "result": True})
 
 @app.route('/')
 def home():
