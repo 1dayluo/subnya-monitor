@@ -39,7 +39,7 @@
           >
             增加监控
           </button>
-          <dialog id="my_modal_2" class="modal">
+          <dialog id="my_modal_2" class="modal" ref="closeButton">
             <div class="modal-box card">
               <div class="card-body items-center text-center">
                 <h3 class="font-bold text-lg card-title">Add!</h3>
@@ -52,7 +52,7 @@
                 </div>
               </div>
             </div>
-            <form method="dialog" class="modal-backdrop">
+            <form method="dialog"   class="modal-backdrop">
               <button>close</button>
             </form>
           </dialog>
@@ -122,9 +122,17 @@ methods:{
         'Content-Type': 'application/json'
       }})
       .then((res) => {
-        this.$notify("添加成功");
+        if(res['data']['result'] == true) {
+          this.$notify("添加成功")
+          this.$refs.closeButton.close()
+        } else {
+          this.$notify("已有该域名")
+        }
+        
+        
       })
     }
+    
  }
 },
 async created() {

@@ -4,10 +4,11 @@
     <!-- {{ Object.keys(monitor_config).length }} -->
     <!-- {{ Object.keys(monitor_config).length === 0 }} -->
     <div v-if="Object.keys(monitor_config).length != 0" class=" mx-auto  min-h-screen">
-      <div class="flex h-full min-h-screen">
+      <div class="flex h-full  min-h-screen">
         <!-- 左侧导航栏 -->
-        <div class="w-1/6 ">
-            <div class="flex h-screen flex-col justify-between border-e bg-white">
+        <!-- <div class="w-1/6 "> -->
+        <div class="fixed h-full w-1/6">
+            <div class=" flex  h-screen flex-col justify-between border-e bg-white">
             <div class="px-4 py-6">
                 <span class="grid h-10 w-32 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
                     Subnya-Monitor 
@@ -39,9 +40,11 @@
 
         </div>
         <!-- 右侧内容区 -->
-        <div class="w-5/6 p-10">
+        <div class=" w-5/6 p-10">
+          <div class="mx-auto container ">
           <!-- <router-tree :routes="routes" /> -->
           <router-view />
+          </div>
         </div>
       </div>
     </div>

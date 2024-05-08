@@ -14,16 +14,35 @@ CORS(app)
 app.secret_key = b'_5#y2L"F4a@@Q8z\n\xec]/'
 base_config_path = str(pathlib.Path.home())+'/.config/subnya'
 log_file = base_config_path + '/log/monitor_run.log'
-output_dir = ''
-sql_path = ''
-target_dir = ''
+# output_dir = ''
+# sql_path = ''
+# target_dir = ''
+def read_config():
+    """
+     读取subnya的配置文件
+    """
+    os.environ['DEFAULT_PATH']=base_config_path+'/'+'config.yml'
+    if os.path.exists(os.environ['DEFAULT_PATH']):
+        with open(os.environ['DEFAULT_PATH'], 'r') as f:
+            result = yaml.load(f.read(), Loader=yaml.FullLoader)
+        print(result['monitor']['dir'][0])
+        result['monitor']['settings']['outdir'] = output_dir =  base_config_path+result['monitor']['settings']['outdir'][1:] if result['monitor']['settings']['outdir'][0] == '.' else result['monitor']['settings']['outdir']
+        result['sqlite']['db_1'] = sql_path =   base_config_path+result['sqlite']['db_1'][1:] if result['sqlite']['db_1'][0] == "." else result['sqlite']['db_1']
+        result['monitor']['settings']['logdir'] = log_file = base_config_path+result['monitor']['settings']['logdir'][1:] if result['monitor']['settings']['logdir'][0] == '.' else result['monitor']['settings']['logdir']
+        result['monitor']['dir'][0] = target_dir =   base_config_path+result['monitor']['dir'][0][1:] if result['monitor']['dir'][0][0] == '.'  else result['monitor']['dir'][0]
+        return result
+        # return json.dumps(result)
+        # return result['monitor']['dir'][0]
+    else:
+        return
 
+config_json = read_config()
 
 def get_db_connection():
     """
         获取db链接
     """
-    db = sqlite3.connect(sql_path)
+    db = sqlite3.connect(config_json['sqlite']['db_1'])
     conn = db.cursor()# This is optional: it allows accessing columns by name
     return conn
 
@@ -32,20 +51,7 @@ def read_config():
     """
      读取subnya的配置文件
     """
-    global output_dir, sql_path, target_dir, log_file
-    os.environ['DEFAULT_PATH']=base_config_path+'/'+'config.yml'
-    if os.path.exists(os.environ['DEFAULT_PATH']):
-        with open(os.environ['DEFAULT_PATH'], 'r') as f:
-            result = yaml.load(f.read(), Loader=yaml.FullLoader)
-        output_dir =  base_config_path+result['monitor']['settings']['outdir'][1:] if result['monitor']['settings']['outdir'][0] == '.' else result['monitor']['settings']['outdir']
-        sql_path =   base_config_path+result['sqlite']['db_1'][1:] if result['sqlite']['db_1'][0] == "." else result['sqlite']['db_1']
-        log_file = base_config_path+result['monitor']['settings']['logdir'][1:] if result['monitor']['settings']['logdir'][0] == '.' else result['monitor']['settings']['logdir']
-        target_dir =   base_config_path+result['monitor']['dir'][1:] if result['monitor']['dir'][0] == '.'  else result['monitor']['dir']
-
-        return json.dumps(result)
-        # return result['monitor']['dir'][0]
-    else:
-        return
+    return config_json
 
 @app.route('/api/set-config-path', methods=['POST'])
 def set_config():
@@ -68,6 +74,14 @@ def set_config():
 
 @app.route('/api/get_monitored')
 def get_monitor_list():
+    results = []
+    if os.path.exists(os.path.join(config_json['monitor']['dir'][0],'monitor.txt')):
+        with open(os.path.join(config_json['monitor']['dir'][0],'monitor.txt'), 'r+') as f:
+            results = [i.strip('\n') for i in f.readlines()]
+    return jsonify({"message":"ok","domains": results})
+
+@app.route('/api/get_dbmonitored')
+def get_dbmonitor_list():
     conn = get_db_connection()
     results = [ result[0] for result in  conn.execute('SELECT DISTINCT domain FROM domains')]
     return jsonify({"message":"ok","domains": results})
@@ -91,13 +105,17 @@ def add_monitor():
     """
         增加监控
     """
-    global target_dir
     domain = request.get_json()['domain']
-    with open(os.path.join(target_dir,'monitor.txt'), '+a') as f:
-        source_domains = f.readlines()
-        if domain not in source_domains:
-            f.writelines([domain])
-    return jsonify({"messgae":"ok", "result": True})
+    with open(os.path.join(config_json['monitor']['dir'][0],'monitor.txt'), 'r+') as f:
+        source_domains = [i.strip('\n') for i in f.readlines()]
+    print(source_domains)
+    if domain not in source_domains:
+        with open(os.path.join(config_json['monitor']['dir'][0],'monitor.txt'), 'a+') as f2:
+            f2.writelines(domain+"\n")
+    # os.system('subnya -r')
+        return jsonify({"messgae":"ok", "result": True})
+    return jsonify({"messgae":"ok", "result": False})
+
 
 @app.route('/')
 def home():
