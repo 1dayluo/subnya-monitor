@@ -1,26 +1,39 @@
 from flask import Flask, redirect, url_for, render_template, \
     request, jsonify, flash, session, Response
+from celery import Celery
 import os
 import pathlib
 import datetime
 import sqlite3
 import json
-from flask_cors import CORS
+from flask_cors import CORSa
 import yaml
 import datetime, time
+from flask_sqlalchemy import SQLAlchemy
+
 
 app = Flask(__name__)
+# 初始化配置
+config_json = read_config()
+db = SQLAlchemy()
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite://{config_json['sqlite']['db_1']}'
+db.init_app(app)
+# CORS设置
 CORS(app)
+# Celery
+celery = Celery(app.name, broker='redis://localhost:6379/1', backend='redis://localhost:6379/2')
 app.secret_key = b'_5#y2L"F4a@@Q8z\n\xec]/'
 base_config_path = str(pathlib.Path.home())+'/.config/subnya'
 log_file = base_config_path + '/log/monitor_run.log'
-# output_dir = ''
-# sql_path = ''
-# target_dir = ''
+output_dir = ''
+sql_path = ''
+target_dir = ''
+
 def read_config():
     """
      读取subnya的配置文件
     """
+    
     os.environ['DEFAULT_PATH']=base_config_path+'/'+'config.yml'
     if os.path.exists(os.environ['DEFAULT_PATH']):
         with open(os.environ['DEFAULT_PATH'], 'r') as f:
@@ -30,14 +43,15 @@ def read_config():
         result['sqlite']['db_1'] = sql_path =   base_config_path+result['sqlite']['db_1'][1:] if result['sqlite']['db_1'][0] == "." else result['sqlite']['db_1']
         result['monitor']['settings']['logdir'] = log_file = base_config_path+result['monitor']['settings']['logdir'][1:] if result['monitor']['settings']['logdir'][0] == '.' else result['monitor']['settings']['logdir']
         result['monitor']['dir'][0] = target_dir =   base_config_path+result['monitor']['dir'][0][1:] if result['monitor']['dir'][0][0] == '.'  else result['monitor']['dir'][0]
+
         return result
         # return json.dumps(result)
         # return result['monitor']['dir'][0]
     else:
         return
 
-config_json = read_config()
 
+@celery.task
 def get_db_connection():
     """
         获取db链接
@@ -127,8 +141,8 @@ def home():
         if os.path.exists(output_dir) and os.path.exists(sql_path):
             # read log file
             all_files = os.listdir(output_dir)
-            conn = get_db_connection()
-            results = [ result[0] for result in  conn.execute('SELECT DISTINCT domain FROM domains')]
+            conn = get_db_connection.delay()
+            results = [ result[0] for result in  conn.result.execute('SELECT DISTINCT domain FROM domains')]
             return render_template('home.html', log_files=all_files, monitored=results)
         else:
             flash('Please set correct path!')
