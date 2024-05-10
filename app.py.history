@@ -6,9 +6,10 @@ import pathlib
 import datetime
 import sqlite3
 import json
-from flask_cors import CORSa
+from flask_cors import CORS
 import yaml
 import datetime, time
+
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -16,7 +17,7 @@ app = Flask(__name__)
 # 初始化配置
 config_json = read_config()
 db = SQLAlchemy()
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite://{config_json['sqlite']['db_1']}'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://{}'.format(config_json['sqlite']['db_1'])
 db.init_app(app)
 # CORS设置
 CORS(app)

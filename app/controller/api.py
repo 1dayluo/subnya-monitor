@@ -1,4 +1,6 @@
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
+from ..models import Domains
+import datetime
 import os
 
 # 待重写
@@ -8,9 +10,8 @@ api = Blueprint('api', __name__, url_prefix='/api')
 
 @api.route('/')
 def read_config():
-    """
-     读取subnya的配置文件
-    """
+    # domains = Domains.query.all()
+    # print(domains[0].domain)
     return 'ok'
 
 @api.route('/set-config-path', methods=['POST'])
@@ -54,9 +55,9 @@ def get_today():
     global output_dir
     today = datetime.datetime.today().strftime("%Y-%m-%d")
     if today in os.listdir(output_dir):
-        return jsonify({"messgae":"ok", "result": true})
+        return jsonify({"messgae":"ok", "result": True})
     else:
-        return jsonify({"messgae":"ok", "result": false})
+        return jsonify({"messgae":"ok", "result": False})
     
 
 

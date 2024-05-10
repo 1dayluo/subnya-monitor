@@ -1,10 +1,29 @@
-from .config import db
+# from .config import db
+from flask_sqlalchemy import SQLAlchemy
+from flask import current_app
 
 
-# class Domains(db.Model):
-#     domain = db.Column()
-#     subdomain = db.Column()
-#     updatetime = db.Column()
-#     checkedtime = db.Column()
-#     ifon = db.Column()
-#     status = db.Column()
+db = SQLAlchemy()
+
+class Domains(db.Model):
+    __tablename__ = 'domains'
+    domain = db.Column(db.String(500), nullable=False)
+    subdomain = db.Column(db.String(500), nullable=False, primary_key=True)
+    updatetime = db.Column(db.DateTime())
+    checkedtime = db.Column(db.Integer)
+    ifon = db.Column(db.Integer)
+    status = db.Column(db.Integer)
+
+class AddedDomains(db.Model):
+    __tablename__ = 'added_domains'
+    domain = db.Column(db.String(500), nullable=False)
+    subdomain = db.Column(db.String(500), nullable=False, primary_key=True)
+    updatetime = db.Column(db.DateTime())
+    checkedtime = db.Column(db.Integer)
+
+class DeletedDomains(db.Model):
+    __tablename__ = 'deleted_domains'
+    domain = db.Column(db.String(500), nullable=False)
+    subdomain = db.Column(db.String(500), nullable=False, primary_key=True)
+    updatetime = db.Column(db.DateTime())
+    checkedtime = db.Column(db.Integer)
