@@ -1,7 +1,7 @@
 from flask import Flask
 import os
 from flask_cors import CORS
-from celery import Celery
+from app.celery import Celery
 from .config import read_config
 from .models import db
 from .controller.api import api

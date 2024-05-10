@@ -1,5 +1,5 @@
 # celery.py
-from celery import Celery
+from app.celery import Celery
 from flask import Flask
 from app.config import read_config
 
