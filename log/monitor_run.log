@@ -1,2 +1,0 @@
-2024/05/08 logger.go:30: [ERR]:%!(EXTRA *net.OpError=dial tcp 172.17.0.1:6379: connect: connection refused)
-2024/05/08 logger.go:30: [ERR]:%!(EXTRA *net.OpError=dial tcp 172.17.0.1:6379: connect: connection refused)

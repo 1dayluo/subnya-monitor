@@ -1,5 +1,7 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from ..models import Domains
+from collections import defaultdict
+from ..task import get_added_list
 import datetime
 import os
 
@@ -8,44 +10,61 @@ import os
 api = Blueprint('api', __name__, url_prefix='/api')
 
 
-@api.route('/')
+@api.route('/read_config')
 def read_config():
+    if current_app.config.get('DEFAULT_PATH'):
+        if os.path.exists(current_app.config.get('DEFAULT_PATH')):
+            return jsonify({
+                'config_path': current_app.config.get('DEFAULT_PATH'),
+                'read_path': current_app.config.get('monitor').get('settings').get('outdir') + 'monitor.txt',
+                'subnya_log': current_app.config.get('monitor').get('settings').get('logdir')
+                })
+        else:
+            return jsonify({})
+    else:
+        return jsonify({})
     # domains = Domains.query.all()
     # print(domains[0].domain)
-    return 'ok'
-
 @api.route('/set-config-path', methods=['POST'])
-def set_config():
-    """
-      设置subnya的配置路径
-    """
-    data = request.json  # 获取 JSON 数据
-    print(data)
-    default_path = data.get('path')
-    if default_path.split('.')[-1]== 'yml':
-        os.environ['DEFAULT_PATH'] = default_path
-        if os.path.exists(os.environ['DEFAULT_PATH']):
-            return jsonify({"message": "Config path updated", "path": default_path}), 200
-        else:
-            return jsonify({"error": "No path specified"}), 400
+def set_config_path():
+    path = request.get_json['path']
+    current_app.config.update(read_config(path))
+    return jsonify({
+            'config_path': current_app.config.get('DEFAULT_PATH'),
+            'read_path': current_app.config.get('monitor')('settings')('outdir') + 'monitor.txt',
+            'subnya_log': current_app.config.get('monitor')('settings')('logdir')
+            })
 
-    else:
-        return jsonify({"error": "No path specified"}), 400
+@api.route('/get_dbmonitored')
+def get_dbmonitor_list():
+    domains = Domains.query.all()
+    results = defaultdict(dict)
+    for domain in domains:
+        
+        subdomain_info = {}
+        # if not results.get('domain.domain'):
+        #     results[domain.domain]  = {}
+        subdomain_info[domain.subdomain] = {
+            'updatetime' : domain.updatetime,
+            'checkedtime': domain.checkedtime,
+            'ifon' : domain.ifon,
+            'status' : domain.status 
+        }
+            
+   
+        results[domain.domain].update(subdomain_info)
 
+    return jsonify({"message":"ok","domains": results})
 
 @api.route('/get_monitored')
-def get_monitor_list():
-    results = []
-    if os.path.exists(os.path.join(config_json['monitor']['dir'][0],'monitor.txt')):
-        with open(os.path.join(config_json['monitor']['dir'][0],'monitor.txt'), 'r+') as f:
-            results = [i.strip('\n') for i in f.readlines()]
-    return jsonify({"message":"ok","domains": results})
+def get_tasks():
+    get_added_list()
+    result =  get_added_list.delay()
+    return result.get()
 
-@api.route('/api/get_dbmonitored')
-def get_dbmonitor_list():
-    conn = get_db_connection()
-    results = [ result[0] for result in  conn.execute('SELECT DISTINCT domain FROM domains')]
-    return jsonify({"message":"ok","domains": results})
+
+
+
 
 @api.route('/api/run_today_status')
 def get_today():

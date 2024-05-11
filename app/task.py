@@ -1,11 +1,17 @@
 import sqlite3
-from celery import Celery
+import os
+from flask import current_app, jsonify
+from celery import shared_task
 
-@Celery.task
-def get_db_connection(db_name):
-    """
-        获取db链接
-    """
-    db = sqlite3.connect(db_name)
-    conn = db.cursor()# This is optional: it allows accessing columns by name
-    return conn
+
+
+@shared_task(ignore_result=False) 
+def get_added_list() -> dict :
+    # print(celery.conf)
+    task_file = current_app.config.get('monitor').get('dir')[0]
+    results = []
+    if os.path.exists(task_file):
+        with open(task_file+'/'+current_app.config.get('task_file'), 'r+') as f:
+            results = [i.strip('\n') for i in f.readlines()]
+    return {"message":"ok","domains": results}
+
