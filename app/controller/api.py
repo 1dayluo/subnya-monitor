@@ -63,34 +63,49 @@ def get_tasks():
     return result.get()
 
 
+@api.route('/log')
+def runlog():
+    log_f = current_app.config['monitor']['settings']['logdir'] + 'monitor_run.log'
+    results = ''
+    if os.path.exists(log_f):
+        with open(log_f, 'r') as f:
+            results = f.read()
+    return jsonify({'data': results})
 
+@api.route('/run')
+def subnya():
+    # 未完。。。待优化
+    os.system('/home/parallels/.config/subnya/subnya  -u')
+    return jsonify({'result': True})
 
-
-@api.route('/api/run_today_status')
+@api.route('/run_today_status')
 def get_today():
     """
         今日是否跑过脚本
     """
-    global output_dir
+    output_dir = current_app.config['monitor']['settings']['outdir']
     today = datetime.datetime.today().strftime("%Y-%m-%d")
     if today in os.listdir(output_dir):
-        return jsonify({"messgae":"ok", "result": True})
+        return jsonify({"messgae":"ok", 
+                        "result": True, 
+                        "last": max(os.listdir(output_dir))})
     else:
-        return jsonify({"messgae":"ok", "result": False})
+        return jsonify({"messgae":"ok", 
+                        "result": False, 
+                         "last": max(os.listdir(output_dir)) })
     
 
 
-@api.route('/api/add_monitor', methods=['POST'])
+@api.route('/add_monitor', methods=['POST'])
 def add_monitor():
     """
         增加监控
     """
     domain = request.get_json()['domain']
-    with open(os.path.join(config_json['monitor']['dir'][0],'monitor.txt'), 'r+') as f:
+    with open(os.path.join(current_app.config['monitor']['dir'][0],'monitor.txt'), 'r+') as f:
         source_domains = [i.strip('\n') for i in f.readlines()]
-    print(source_domains)
     if domain not in source_domains:
-        with open(os.path.join(config_json['monitor']['dir'][0],'monitor.txt'), 'a+') as f2:
+        with open(os.path.join(current_app.config['monitor']['dir'][0],'monitor.txt'), 'a+') as f2:
             f2.writelines(domain+"\n")
     # os.system('subnya -r')
         return jsonify({"messgae":"ok", "result": True})

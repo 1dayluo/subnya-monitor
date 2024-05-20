@@ -18,15 +18,14 @@ def create_app():
     app.config.update(custom_config)
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///{}".format(custom_config['sqlite']['db_1'])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['broker_connection_retry_on_startup'] = True
     app.config['task_file'] = 'monitor.txt'
     app.config['DEBUG'] = True
-    app.config['broker_connection_retry_on_startup'] = True
     db.init_app(app)
     app.config.from_mapping(
     CELERY=dict(
         broker_url=custom_config.get('celery_broker'),
         result_backend=custom_config.get('celery_backend'),
+        broker_connection_retry_on_startup=True,
         task_ignore_result=True,
     ),
     )

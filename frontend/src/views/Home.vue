@@ -15,7 +15,7 @@
             class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 bg-white px-5 py-3 text-gray-500 transition hover:text-gray-700 focus:outline-none focus:ring"
             type="button"
           >
-            <span class="text-sm font-medium"> View Website </span>
+            <span class="text-sm font-medium"> Run </span>
 
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -63,10 +63,13 @@
 
     <br /> <br />
     
-    <div class="text-xl font-medium m-2">
-        当前监控：
+    <div >
+        <p class="text-xs text-gray-600">今日状态：{{ today_status }}  / 最后运行时间: {{  last  }}</p>
+        <br />
+        <p class="text-xl font-medium m-2">当前监控： </p>
+        <subdomainList :my-array="monitorDict"></subdomainList>
     </div>
-    <subdomainList :my-array="monitorList"></subdomainList>
+    
     <!-- <div id="monitor" class="">
       <h1>监控域名</h1>
       <li v-for="domain in monitorList" :key="domain">
@@ -83,28 +86,28 @@ import  subdomainList from "../components/subdomainList.vue"
 import axios from "axios"
 
 
-
-
 export default {
 name: 'homeIndex',
 data() {
   return {
-    monitorList: '',
+    monitorDict: '',
     addMonitor: '',
+    today_status: false,
+    last: ''
   }
 },
 components: {
   subdomainList
   },
+mounted: function(){
+  this.run_status()
+},
 methods:{
  outfile(){
   axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/outfile/${route.params.filedate}`)
   .then((res) => {
     
   })
- },
- getlist_outfiles(){
-
  },
  add_monitor(){
     const reg = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
@@ -133,14 +136,21 @@ methods:{
       })
     }
     
- }
+ },
+ run_status(){
+    axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/run_today_status`)
+    .then((res)=>{
+      this.today_status = res.data.result,
+      this.last =  res.data.last
+    })
+ },
 },
 async created() {
   try {
 
     axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/get_monitored`)
     .then((res) => {
-        this.monitorList = res.data.domains
+        this.monitorDict = res.data.domains
     })
   } catch (error) {
     console.error("API 请求失败:", error);

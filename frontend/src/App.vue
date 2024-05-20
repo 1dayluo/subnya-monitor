@@ -4,40 +4,41 @@
     <!-- {{ Object.keys(monitor_config).length }} -->
     <!-- {{ Object.keys(monitor_config).length === 0 }} -->
     <div v-if="Object.keys(monitor_config).length != 0" class=" mx-auto  min-h-screen">
-      <div class="flex h-full  min-h-screen">
+      <div class="flex   min-h-screen">
         <!-- 左侧导航栏 -->
-        <!-- <div class="w-1/6 "> -->
-        <div class="fixed h-full w-1/6">
-            <div class=" flex  h-screen flex-col justify-between border-e bg-white">
-            <div class="px-4 py-6">
-                <span class="grid h-10 w-32 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
-                    Subnya-Monitor 
-                </span>
+        <div class="w-1/6 ">
+          <div class="fixed h-full w-1/6">
+              <div class=" flex  h-screen flex-col justify-between border-e bg-white">
+              <div class="px-4 py-6">
+                  <span class="grid h-10 w-32 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
+                      Subnya-Monitor 
+                  </span>
 
-                <ul class="mt-6 space-y-1">
-                    <SideMenu></SideMenu>
-                </ul>
-            </div>
+                  <ul class="mt-6 space-y-1">
+                      <SideMenu></SideMenu>
+                  </ul>
+              </div>
 
-            <div class="sticky inset-x-0 bottom-0 border-t border-gray-100">
-                <a href="#" class="flex items-center gap-2 bg-white p-4 hover:bg-gray-50">
-                <img
-                    alt=""
-                    src="https://img2.woyaogexing.com/2017/06/26/0d722bd19ef69c88!400x400_big.jpg"
-                    class="size-10 rounded-full object-cover"
-                />
+              <div class="sticky inset-x-0 bottom-0 border-t border-gray-100">
+                  <a href="#" class="flex items-center gap-2 bg-white p-4 hover:bg-gray-50">
+                  <img
+                      alt=""
+                      src="https://img2.woyaogexing.com/2017/06/26/0d722bd19ef69c88!400x400_big.jpg"
+                      class="size-10 rounded-full object-cover"
+                  />
 
-                <div>
-                    <p class="text-xs">
-                    <strong class="block font-medium">1Dayluo</strong>
-                    5ms2hu11@duck.com
-                    <span>  </span>
-                    </p>
-                </div>
-                </a>
-            </div>
-            </div>
+                  <div>
+                      <p class="text-xs">
+                      <strong class="block font-medium">1Dayluo</strong>
+                      5ms2hu11@duck.com
+                      <span>  </span>
+                      </p>
+                  </div>
+                  </a>
+              </div>
+              </div>
 
+          </div>
         </div>
         <!-- 右侧内容区 -->
         <div class=" w-5/6 p-10">
